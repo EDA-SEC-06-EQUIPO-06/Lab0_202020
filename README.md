@@ -10,3 +10,4 @@
 Integrantes:
 
 - Felix Samuel Rojas Casadiego | fs.rojas@uniandes.edu.co | 202013414
+- Sebastian Heredia Vargas | s.herediav@uniandes.edu.co | 202012346
