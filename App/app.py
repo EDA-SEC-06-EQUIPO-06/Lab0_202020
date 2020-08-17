@@ -130,7 +130,9 @@ def countElementsByCriteria(criteria, column, lista_cast, lista_detalles):
         ids = []
         for element in lista_cast:
             if criteria.lower() in element["director_name"].lower(): #filtrar por palabra clave 
-               id_n = element["id"]
+               id_n = element.get("id")
+               if id_n == None:
+                  id_n = element.get("\ufeffid")
                ids.append(id_n)
         suma_calificaciones = 0       
         for element in lista_detalles:
