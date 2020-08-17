@@ -136,11 +136,17 @@ def countElementsByCriteria(criteria, column, lista_cast, lista_detalles):
                ids.append(id_n)
         suma_calificaciones = 0       
         for element in lista_detalles:
-            if element.get("id") in ids and float(element[column]) >= 6:
+            element_id = element.get("id")
+            if element_id == None:
+               element_id = element.get("\ufeffid")
+            if element_id in ids and float(element[column]) >= 6:
                counter +=1 
                suma_calificaciones += float(element[column])
         t1_stop = process_time() #tiempo final
-        promedio = suma_calificaciones / counter
+        if counter == 0:
+           promedio = 0 
+        else:
+            promedio = suma_calificaciones / counter
         print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
     return counter, promedio 
 
