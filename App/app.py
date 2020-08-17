@@ -29,7 +29,9 @@
 import config as cf
 import sys
 import csv
+
 from time import process_time 
+
 
 def loadCSVFile (file, lst, sep=";"):
     """
@@ -101,11 +103,44 @@ def countElementsFilteredByColumn(criteria, column, lst):
         print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
     return counter
 
-def countElementsByCriteria(criteria, column, lst):
+def countElementsByCriteria(criteria, column, lista_cast, lista_detalles):
     """
-    Retorna la cantidad de elementos que cumplen con un criterio para una columna dada
+    Retorna la cantidad de películas que tienen votación positiva >= 6 y
+    usa dos listas para obtener información entre ambas mediante su "id" compartido.
+    Args:
+        criteria:: str
+            Critero sobre el cual se va a contar la cantidad de apariciones (Nombre del director)
+        column
+            Columna del arreglo sobre la cual se debe realizar el conteo (vote_average)
+        lista_cast
+            Lista con la información del casting en la que se buscan los "id" del director.
+        lista_detalles  
+            Lista con los detalles de la película, en la que mediante el id se encuentra el vote_average
+    Return:
+        counter :: int
+            la cantidad de veces ue aparece un elemento con el criterio definido
+
     """
-    return 0
+    if len(lista_cast)==0 or len(lista_detalles) == 0:
+        print("La(s) lista(s) esta(n) vacía(s)")  
+        return 0
+    else:
+        t1_start = process_time() #tiempo inicial
+        counter=0 #Cantidad de repeticiones
+        ids = []
+        for element in lista_cast:
+            if criteria.lower() in element["director_name"].lower(): #filtrar por palabra clave 
+               id_n = element["id"]
+               ids.append(id_n)
+        suma_calificaciones = 0       
+        for element in lista_detalles:
+            if element.get("id") in ids and float(element[column]) >= 6:
+               counter +=1 
+               suma_calificaciones += float(element[column])
+        t1_stop = process_time() #tiempo final
+        promedio = suma_calificaciones / counter
+        print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
+    return counter, promedio 
 
 
 def main():
@@ -122,22 +157,27 @@ def main():
         inputs =input('Seleccione una opción para continuar\n') #leer opción ingresada
         if len(inputs)>0:
             if int(inputs[0])==1: #opcion 1
-                loadCSVFile("Data/test.csv", lista) #llamar funcion cargar datos
-                print("Datos cargados, "+str(len(lista))+" elementos cargados")
+                lista_cast = []
+                lista_detalles = []
+                loadCSVFile("Data/themoviesdb/allmoviescastingraw.csv", lista_cast) #llamar funcion cargar datos
+                loadCSVFile("Data/themoviesdb/allmoviesdetailscleaned.csv", lista_detalles) #llamar funcion cargar datos
+                print("Datos cargados, "+str(len(lista_cast))+" elementos cargados")
+                print("Datos cargados, "+str(len(lista_detalles))+" elementos cargados")
             elif int(inputs[0])==2: #opcion 2
                 if len(lista)==0: #obtener la longitud de la lista
                     print("La lista esta vacía")    
                 else: print("La lista tiene "+str(len(lista))+" elementos")
             elif int(inputs[0])==3: #opcion 3
                 criteria =input('Ingrese el criterio de búsqueda\n')
-                counter=countElementsFilteredByColumn(criteria, "nombre", lista) #filtrar una columna por criterio  
-                print("Coinciden ",counter," elementos con el crtierio: ", criteria  )
+                columna = input("Ingrese el nombre de la columna\n")
+                counter=countElementsFilteredByColumn(criteria, columna , lista_cast) #filtrar una columna por criterio  
+                print("Coinciden ",counter," elementos con el criterio: ", criteria  )
             elif int(inputs[0])==4: #opcion 4
                 criteria =input('Ingrese el criterio de búsqueda\n')
-                counter=countElementsByCriteria(criteria,0,lista)
-                print("Coinciden ",counter," elementos con el crtierio: '", criteria ,"' (en construcción ...)")
+                counter=countElementsByCriteria(criteria,"vote_average",lista_cast, lista_detalles)
+                print("Coinciden ",counter[0]," películas con el criterio : ",criteria)
+                print("El promedio de votación del criterio es de: ",counter[1])
             elif int(inputs[0])==0: #opcion 0, salir
-                sys.exit(0)
-
+                sys.exit(0)             
 if __name__ == "__main__":
     main()
