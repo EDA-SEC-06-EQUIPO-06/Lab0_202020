@@ -137,7 +137,10 @@ def buena_pelicula(numero_id,info_peli):
     promedio=0
     while filas < len(info_peli):
         x=info_peli[filas]
-        idf=x["id"]
+        idf=x.get("id")
+        if idf == None:
+            idf=x["\ufeffid"]
+
         for i in numero_id:
             if idf == i:
                 y=float(x['vote_average'])
@@ -178,6 +181,7 @@ def main():
                 counter=countElementsFilteredByColumn(criteria, 2 , lista) #filtrar una columna por criterio  
                 print("Coinciden ",counter," elementos con el crtierio: ", criteria  )
             elif int(inputs[0])==4: #opcion 4
+                t1_start = process_time()
                 director =input('Ingrese el director que desea buscar\n')
                 lista_casting=loadCSVFile("Data/themoviesdb/AllMoviesCastingRaw.csv", lista)
                 x=director_id(lista_casting,director)
@@ -186,6 +190,9 @@ def main():
                 respuesta=buena_pelicula(x,lista_detalles)
                 numero_buenas=respuesta[0]
                 promedio=respuesta[1]
+                
+                t1_stop = process_time()
+                print(print("Tiempo de ejecución ",t1_stop-t1_start," segundos"))
                 print("El numero de peliculas buenas del director {0} fueron {1} con un promedio de {2}".format(director,numero_buenas,promedio))
                 
 
