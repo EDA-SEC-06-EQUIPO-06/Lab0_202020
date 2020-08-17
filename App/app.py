@@ -170,7 +170,29 @@ def director_id(casting,director):
     
     return numero_id
     
-    
+def countElementsByCriteria1(criteria, column, lstc, lstd):
+    """
+    Retorna la cantidad de elementos que cumplen con un criterio para una columna dada
+    """
+    if len(lstc)==0 or len(lstd) == 0:
+        print("La lista esta vacía")  
+        return 0
+    else:
+        t1_start = process_time() #tiempo inicial
+        counter=0 #Cantidad de repeticiones
+        idc = []
+        for element in lstc:
+            if criteria.lower() in element["director_name"].lower():
+                idc.append(element["id"] )
+        svotos = 0       
+        for element in lstd:
+            if element["\ufeffid"] in idc and float(element[column]) >= 6:
+               counter +=1
+               svotos += float(element[column])
+        t1_stop = process_time() #tiempo final
+        prom = round(svotos / counter,2)
+        print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
+    return prom, counter
 
 def buena_pelicula(numero_id,info_peli):
     filas=0
