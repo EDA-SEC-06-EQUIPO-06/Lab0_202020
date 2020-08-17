@@ -167,7 +167,7 @@ def main():
         if len(inputs)>0:
             if int(inputs[0])==1: #opcion 1
                 lista = []
-                loadCSVFile("Data/themoviesdb/MoviesCastingRaw-small.csv", lista) #llamar funcion cargar datos
+                loadCSVFile("Data/themoviesdb/AllMoviesCastingRaw.csv", lista) #llamar funcion cargar datos
                 print("Datos cargados, "+str(len(lista))+" elementos cargados")
             elif int(inputs[0])==2: #opcion 2
                 if len(lista)==0: #obtener la longitud de la lista
@@ -179,10 +179,10 @@ def main():
                 print("Coinciden ",counter," elementos con el crtierio: ", criteria  )
             elif int(inputs[0])==4: #opcion 4
                 director =input('Ingrese el director que desea buscar\n')
-                lista_casting=loadCSVFile("Data/themoviesdb/MoviesCastingRaw-small.csv", lista)
+                lista_casting=loadCSVFile("Data/themoviesdb/AllMoviesCastingRaw.csv", lista)
                 x=director_id(lista_casting,director)
                 
-                lista_detalles=loadCSVFile("Data/themoviesdb/SmallMoviesDetailsCleaned.csv", lista)
+                lista_detalles=loadCSVFile("Data/themoviesdb/AllMoviesDetailsCleaned.csv", lista)
                 respuesta=buena_pelicula(x,lista_detalles)
                 numero_buenas=respuesta[0]
                 promedio=respuesta[1]
