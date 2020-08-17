@@ -101,11 +101,29 @@ def countElementsFilteredByColumn(criteria, column, lst):
         print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
     return counter
 
-def countElementsByCriteria(criteria, column, lst):
+def countElementsByCriteria(criteria, column, lstc, lstd):
     """
     Retorna la cantidad de elementos que cumplen con un criterio para una columna dada
     """
-    return 0
+    if len(lstc)==0 or len(lstd) == 0:
+        print("La lista esta vacía")  
+        return 0
+    else:
+        t1_start = process_time() #tiempo inicial
+        counter=0 #Cantidad de repeticiones
+        idc = []
+        for element in lstc:
+            if criteria.lower() in element["director_name"].lower():
+                idc.append(element["id"] )
+        svotos = 0       
+        for element in lstd:
+            if element["\ufeffid"] in idc and float(element[column]) >= 6:
+               counter +=1
+               svotos += float(element[column])
+        t1_stop = process_time() #tiempo final
+        prom = round(svotos / counter,2)
+        print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
+    return prom, counter
 
 
 def main():
@@ -124,6 +142,12 @@ def main():
             if int(inputs[0])==1: #opcion 1
                 loadCSVFile("Data/test.csv", lista) #llamar funcion cargar datos
                 print("Datos cargados, "+str(len(lista))+" elementos cargados")
+                lstc = []
+                lstd = []
+                loadCSVFile("Data/themoviesdb/allmoviescastingraw.csv", lstc) #llamar funcion cargar datos
+                loadCSVFile("Data/themoviesdb/allmoviesdetailscleaned.csv", lstd) #llamar funcion cargar datos
+                print("Datos cargados, "+str(len(lstc))+" elementos cargados")
+                print("Datos cargados, "+str(len(lstd))+" elementos cargados")
             elif int(inputs[0])==2: #opcion 2
                 if len(lista)==0: #obtener la longitud de la lista
                     print("La lista esta vacía")    
@@ -134,10 +158,11 @@ def main():
                 print("Coinciden ",counter," elementos con el crtierio: ", criteria  )
             elif int(inputs[0])==4: #opcion 4
                 criteria =input('Ingrese el criterio de búsqueda\n')
-                counter=countElementsByCriteria(criteria,0,lista)
-                print("Coinciden ",counter," elementos con el crtierio: '", criteria ,"' (en construcción ...)")
+                counter=countElementsByCriteria(criteria,"vote_average",lstc,lstd)
+                print("Coinciden ",counter[1]," elementos con el crtierio: ", criteria ,", y el promedio de los votos es: ", counter[0])
             elif int(inputs[0])==0: #opcion 0, salir
                 sys.exit(0)
 
 if __name__ == "__main__":
     main()
+    
