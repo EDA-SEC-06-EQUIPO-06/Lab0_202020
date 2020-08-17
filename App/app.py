@@ -194,7 +194,7 @@ def countElementsByCriteria1(criteria, column, lstc, lstd):
         print("Tiempo de ejecución ",t1_stop-t1_start," segundos")
     return prom, counter
 
-def buena_pelicula(numero_id,info_peli):
+def countElementsByCriteria2(numero_id,info_peli):
     filas=0
     numero_peliculas_buenas=0
     promedio=0
