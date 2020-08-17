@@ -150,6 +150,51 @@ def countElementsByCriteria(criteria, column, lista_cast, lista_detalles):
         print("Tiempo de ejecución ",t1_stop-t1_start," segundos")    
     return counter, promedio 
 
+def director_id(casting,director):
+    
+    filas=0
+    numero_id=[]
+    i=len(casting)
+    while filas<i:
+        
+        x=casting[filas]
+        director_lista=x["director_name"]
+        
+        if director == director_lista:
+            ids=x["id"]
+            numero_id.append(ids)
+        elif director_lista == director:
+            ids = x["id"]
+            numero_id.append(ids)    
+        filas+=1
+    
+    return numero_id
+    
+    
+
+def buena_pelicula(numero_id,info_peli):
+    filas=0
+    numero_peliculas_buenas=0
+    promedio=0
+    while filas < len(info_peli):
+        x=info_peli[filas]
+        idf=x.get("id")
+        if idf == None:
+            idf=x["\ufeffid"]
+
+        for i in numero_id:
+            if idf == i:
+                y=float(x['vote_average'])
+                if y >=6:
+                    numero_peliculas_buenas+=1
+                    promedio+=y
+
+        filas+=1    
+    if float(numero_peliculas_buenas) >0:
+        devolver_promedio=float(promedio)/float(numero_peliculas_buenas)          
+    else:
+        devolver_promedio=0
+    return(numero_peliculas_buenas,devolver_promedio)
 
 def main():
     """
